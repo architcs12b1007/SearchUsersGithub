@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GitHub User Search</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to your CSS file -->
+
+</head>
+<body>
+    <h1>GitHub User Search</h1>
+    <input type="text" id="searchInput" placeholder="Search by name" />
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Avatar URL</th>
+                <th>Repos URL</th>
+            </tr>
+        </thead>
+        <tbody id="userList">
+        </tbody>
+    </table>
+    <div id="pagination">
+        <button id="prevPage" onclick="prevPage()">Previous</button>
+        <span id="pageInfo">Page 1</span>
+        <button id="nextPage" onclick="nextPage()">Next</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const userList = document.getElementById("userList");
+        let currentPage = 1;
+        const perPage = 10; // Number of results per page
+
+        function updatePageInfo() {
+            document.getElementById("pageInfo").innerText = `Page ${currentPage}`;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                searchUsers();
+                updatePageInfo();
+            }
+        }
+
+        function nextPage() {
+            currentPage++;
+            searchUsers();
+            updatePageInfo();
+        }
+
+        searchInput.addEventListener("input", () => {
+            
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(searchUsers, 500); // Delay search by 500 ms
+            currentPage = 1;
+            updatePageInfo();
+        });
+
+        let typingTimeout;
+
+        async function searchUsers() {
+            const searchTerm = searchInput.value;
+            userList.innerHTML = ""; // Clear previous results
+
+            if (searchTerm) {
+                const apiUrl = `/search?name=${searchTerm}&page=${currentPage}`;
+
+                try{
+                    const response = await axios.get(apiUrl);
+                    const users = response.data.items;
+
+                    users.forEach((user) => {
+                        const row = document.createElement("tr");
+                        const usernameCell = document.createElement("td");
+                        const avatarCell = document.createElement("td");
+                        const reposCell = document.createElement("td");
+
+                        usernameCell.textContent = user.login;
+                        avatarCell.textContent = user.avatar_url;
+                        reposCell.textContent=user.repos_url
+                    
+
+                        row.appendChild(usernameCell);
+                        row.appendChild(avatarCell);
+                        row.appendChild(reposCell);
+
+                        userList.appendChild(row);
+                    });
+
+                }
+                catch (error) {
+                console.error(error);
+                }                  
+            }
+        }
+    </script>
+</body>
+</html>

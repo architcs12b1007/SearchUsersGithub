@@ -1,0 +1,18 @@
+
+Goal: Search for users by their name using the GitHub API (sorted by the number of followers) and display the
+username, avatar_url and repos_url in a table.
+
+UX Flow:
+1- Type the full name of the user, like Ben Lesh, Jake Wharton, Krunoslav Zaherand, and so on.
+2- Show results as the user types the name without them having to press a search button.
+
+How to Use:
+
+1. Install the required dependencies using npm: npm install
+
+2. Start the development server: npm start
+
+3. Open your browser and navigate to http://localhost:3000 to search users by thir name.
+
+
+
